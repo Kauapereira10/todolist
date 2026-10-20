@@ -53,4 +53,13 @@ public class Task {
     @LastModifiedDate
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
+
+    public Task(String name, String description, Status status, Priority priority, LocalDate dueDate) {
+        this.name = name;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.dueDate = dueDate;
+    }
+
 }
