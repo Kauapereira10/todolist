@@ -4,7 +4,6 @@ import br.com.kauapereira.todolist.model.enums.Priority;
 import br.com.kauapereira.todolist.model.enums.Status;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 
 public record TaskResponseDTO(
     Long id,

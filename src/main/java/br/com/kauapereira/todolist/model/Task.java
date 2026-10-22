@@ -26,7 +26,7 @@ public class Task {
 
     @Setter
     @Column(nullable = false, length = 100)
-    private String name;
+    private String title;
 
     @Setter
     @Column(columnDefinition = "TEXT")
@@ -54,8 +54,8 @@ public class Task {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
-    public Task(String name, String description, Status status, Priority priority, LocalDate dueDate) {
-        this.name = name;
+    public Task(String title, String description, Status status, Priority priority, LocalDate dueDate) {
+        this.title = title;
         this.description = description;
         this.status = status;
         this.priority = priority;
