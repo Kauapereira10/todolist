@@ -5,12 +5,12 @@ import br.com.kauapereira.todolist.dto.TaskResponseDTO;
 import br.com.kauapereira.todolist.model.Task;
 import org.mapstruct.Mapper;
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface TaskMapper {
 
     TaskResponseDTO toDto(Task task);
 
-    Task toEntity(Task taskResponseDTO);
+    Task toEntity(TaskRequestDTO requestDTO);
 
     Task updateTaskFromDto(TaskRequestDTO requestDTO, Task task);
 

@@ -27,9 +27,9 @@ public class TaskService {
     private final TaskMapper mapper;
 
     @Transactional
-    public TaskResponseDTO createTask(String title, String description, Status status, Priority priority, LocalDate dueDate) {
-        validator.createTask(title, description, status, priority, dueDate);
-        Task task = new Task(title, description, status, priority, dueDate);
+    public TaskResponseDTO createTask(TaskRequestDTO requestDTO) {
+        validator.createTask(requestDTO);
+        Task task = mapper.toEntity(requestDTO);
         Task saved = repository.save(task);
         return mapper.toDto(saved);
     }
@@ -63,6 +63,30 @@ public class TaskService {
     public void deleteTask(Long id) {
         Task task = findTaskById(id);
         repository.delete(task);
+    }
+
+    public TaskResponseDTO updateTaskStatus(Long id, Status status) {
+        Task task = findTaskById(id);
+        validator.updateTaskStatus(status);
+        task.setStatus(status);
+        Task updated = repository.save(task);
+        return mapper.toDto(updated);
+    }
+
+    public TaskResponseDTO updateTaskDueDate(Long id, LocalDate dueDate) {
+        Task task = findTaskById(id);
+        validator.updateTaskDueDate(dueDate);
+        task.setDueDate(dueDate);
+        Task updated = repository.save(task);
+        return mapper.toDto(updated);
+    }
+
+    public TaskResponseDTO updateTaskPriority(Long id, Priority priority) {
+        Task task = findTaskById(id);
+        validator.updateTaskPriority(priority);
+        task.setPriority(priority);
+        Task updated = repository.save(task);
+        return mapper.toDto(updated);
     }
 
     private Task findTaskById(Long id) {
