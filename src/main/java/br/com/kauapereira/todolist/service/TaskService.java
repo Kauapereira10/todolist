@@ -1,7 +1,6 @@
 package br.com.kauapereira.todolist.service;
 
-import br.com.kauapereira.todolist.dto.TaskRequestDTO;
-import br.com.kauapereira.todolist.dto.TaskResponseDTO;
+import br.com.kauapereira.todolist.dto.*;
 import br.com.kauapereira.todolist.exception.ResourceNotFoundException;
 import br.com.kauapereira.todolist.mappers.TaskMapper;
 import br.com.kauapereira.todolist.model.Task;
@@ -55,8 +54,8 @@ public class TaskService {
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO requestDTO) {
         validator.updateTask(requestDTO.title());
         Task task = findTaskById(id);
-        Task updated = repository.save(mapper.updateTaskFromDto(requestDTO, task));
-        return mapper.toDto(updated);
+        mapper.updateTaskFromDto(requestDTO, task);
+        return mapper.toDto(task);
     }
 
     @Transactional
@@ -65,26 +64,26 @@ public class TaskService {
         repository.delete(task);
     }
 
-    public TaskResponseDTO updateTaskStatus(Long id, Status status) {
+    @Transactional
+    public TaskResponseDTO updateTaskStatus(Long id, TaskStatusDTO statusDTO) {
         Task task = findTaskById(id);
-        validator.updateTaskStatus(status);
-        task.setStatus(status);
+        mapper.updateStatusFromDto(statusDTO, task);
         Task updated = repository.save(task);
         return mapper.toDto(updated);
     }
 
-    public TaskResponseDTO updateTaskDueDate(Long id, LocalDate dueDate) {
+    @Transactional
+    public TaskResponseDTO updateTaskDueDate(Long id, TaskDueDateDTO dueDateDTO) {
         Task task = findTaskById(id);
-        validator.updateTaskDueDate(dueDate);
-        task.setDueDate(dueDate);
+        mapper.updateDueDateFromDto(dueDateDTO, task);
         Task updated = repository.save(task);
         return mapper.toDto(updated);
     }
 
-    public TaskResponseDTO updateTaskPriority(Long id, Priority priority) {
+    @Transactional
+    public TaskResponseDTO updateTaskPriority(Long id, TaskPriorityDTO priorityDtop) {
         Task task = findTaskById(id);
-        validator.updateTaskPriority(priority);
-        task.setPriority(priority);
+        mapper.updatePriorityFromDto(priorityDtop, task);
         Task updated = repository.save(task);
         return mapper.toDto(updated);
     }

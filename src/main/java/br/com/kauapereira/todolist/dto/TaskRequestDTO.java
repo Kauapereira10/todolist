@@ -1,8 +1,6 @@
 package br.com.kauapereira.todolist.dto;
 
 import br.com.kauapereira.todolist.model.enums.Priority;
-import br.com.kauapereira.todolist.model.enums.Status;
-import jakarta.persistence.Enumerated;
 import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
@@ -18,9 +16,6 @@ public record TaskRequestDTO(
 
     @Size(max = 200, message = "Description must be at most 200 characters")
     String description,
-
-    @NotNull(message = "Status cannot be empty (TO_DO, IN_PROGRESS, COMPLETED, CANCELLED)")
-    Status status,
 
     @NotNull(message = "Priority cannot be null (NONE, LOW, MEDIUM, HIGH)")
     Priority priority,

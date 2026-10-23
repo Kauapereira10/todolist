@@ -1,20 +1,12 @@
 package br.com.kauapereira.todolist.controller;
 
-import br.com.kauapereira.todolist.dto.TaskRequestDTO;
-import br.com.kauapereira.todolist.dto.TaskResponseDTO;
+import br.com.kauapereira.todolist.dto.*;
 import br.com.kauapereira.todolist.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -31,10 +23,9 @@ public class TaskController {
         return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO);
     }
 
-    @GetMapping("/list")
+    @GetMapping
     public ResponseEntity<List<TaskResponseDTO>> listTasks() {
-        List<TaskResponseDTO> tasks = service.listTasks();
-        return ResponseEntity.status(HttpStatus.OK).body(tasks);
+        return ResponseEntity.ok(service.listTasks());
     }
 
     @PutMapping("/{id}")
@@ -42,14 +33,36 @@ public class TaskController {
             @PathVariable("id") Long id,
             @Valid @RequestBody TaskRequestDTO dto
     ) {
-        TaskResponseDTO responseDTO = service.updateTask(id, dto);
-        return ResponseEntity.status(HttpStatus.OK).body(responseDTO);
+        return ResponseEntity.ok(service.updateTask(id, dto));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TaskResponseDTO> updateTaskStatus(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody TaskStatusDTO dto
+    ) {
+        return ResponseEntity.ok(service.updateTaskStatus(id, dto));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TaskResponseDTO> updateTaskPriority(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody TaskPriorityDTO dto
+    ) {
+        return ResponseEntity.ok(service.updateTaskPriority(id, dto));
+    }
+
+    @PatchMapping("/{id}/status")
+    public ResponseEntity<TaskResponseDTO> updateDueDate(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody TaskDueDateDTO dto
+    ) {
+       return ResponseEntity.ok(service.updateTaskDueDate(id, dto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable("id") Long id) {
         service.deleteTask(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+        return ResponseEntity.noContent().build();
     }
-
 }

@@ -14,9 +14,6 @@ public class TaskValidator {
         if (dto.title() == null || dto.title().trim().isEmpty()) {
             throw new IllegalArgumentException("Task title is required");
         }
-        if (dto.status() == null) {
-            throw new IllegalArgumentException("Status is required");
-        }
         if (dto.priority() == null) {
             throw new IllegalArgumentException("Priority is required");
         }
