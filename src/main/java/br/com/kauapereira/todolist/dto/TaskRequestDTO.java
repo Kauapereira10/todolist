@@ -1,16 +1,13 @@
 package br.com.kauapereira.todolist.dto;
 
 import br.com.kauapereira.todolist.model.enums.Priority;
-import jakarta.validation.constraints.FutureOrPresent;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
+import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
 public record TaskRequestDTO(
 
-    @NotEmpty(message = "Title cannot be empty")
+    @NotBlank(message = "Title cannot be blank")
     @Size(max = 100, min = 3, message = "Title must be between 3 and 100 characters")
     String title,
 
@@ -21,7 +18,6 @@ public record TaskRequestDTO(
     Priority priority,
 
     @NotNull(message = "Due date cannot be empty")
-    @FutureOrPresent(message = "Due date must be today or in the future")
     LocalDate dueDate
 ) {
 }

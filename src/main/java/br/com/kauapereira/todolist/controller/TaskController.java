@@ -28,6 +28,11 @@ public class TaskController {
         return ResponseEntity.ok(service.listTasks());
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<TaskResponseDTO> getTaskById(@PathVariable("id") Long id) {
+        return ResponseEntity.ok(service.findByTaskId(id));
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<TaskResponseDTO> updateTask(
             @PathVariable("id") Long id,
@@ -44,7 +49,7 @@ public class TaskController {
         return ResponseEntity.ok(service.updateTaskStatus(id, dto));
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{id}/priority")
     public ResponseEntity<TaskResponseDTO> updateTaskPriority(
             @PathVariable("id") Long id,
             @Valid @RequestBody TaskPriorityDTO dto
@@ -52,7 +57,7 @@ public class TaskController {
         return ResponseEntity.ok(service.updateTaskPriority(id, dto));
     }
 
-    @PatchMapping("/{id}/status")
+    @PatchMapping("/{id}/dueDate")
     public ResponseEntity<TaskResponseDTO> updateDueDate(
             @PathVariable("id") Long id,
             @Valid @RequestBody TaskDueDateDTO dto
