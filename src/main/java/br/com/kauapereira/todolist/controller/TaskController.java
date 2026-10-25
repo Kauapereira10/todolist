@@ -1,6 +1,8 @@
 package br.com.kauapereira.todolist.controller;
 
 import br.com.kauapereira.todolist.dto.*;
+import br.com.kauapereira.todolist.model.enums.Priority;
+import br.com.kauapereira.todolist.model.enums.Status;
 import br.com.kauapereira.todolist.service.TaskService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -24,8 +26,11 @@ public class TaskController {
     }
 
     @GetMapping
-    public ResponseEntity<List<TaskResponseDTO>> listTasks() {
-        return ResponseEntity.ok(service.listTasks());
+    public ResponseEntity<List<TaskResponseDTO>> listTasks(
+            @RequestParam(name = "status", required = false) Status status,
+            @RequestParam(name = "priority", required = false) Priority priority
+    ) {
+        return ResponseEntity.ok(service.listTasks(status, priority));
     }
 
     @GetMapping("/{id}")
