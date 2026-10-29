@@ -4,6 +4,7 @@ import br.com.kauapereira.todolist.dto.*;
 import br.com.kauapereira.todolist.exception.InvalidStatusTransitionException;
 import br.com.kauapereira.todolist.exception.ResourceNotFoundException;
 import br.com.kauapereira.todolist.mappers.TaskMapper;
+import br.com.kauapereira.todolist.model.Owner;
 import br.com.kauapereira.todolist.model.Task;
 import br.com.kauapereira.todolist.model.enums.Priority;
 import br.com.kauapereira.todolist.model.enums.Status;
@@ -22,33 +23,34 @@ public class TaskService {
     private final TaskMapper mapper;
 
     @Transactional
-    public TaskResponseDTO createTask(TaskRequestDTO requestDTO) {
+    public TaskResponseDTO createTask(TaskRequestDTO requestDTO, Owner owner) {
         Task task = mapper.toEntity(requestDTO);
+        task.setOwner(owner);
         return mapper.toDto(repository.save(task));
     }
 
     @Transactional(readOnly = true)
-    public List<TaskResponseDTO> listTasks(Status status, Priority priority) {
-        return repository.findByFilters(status, priority).stream()
+    public List<TaskResponseDTO> listTasks(Status status, Priority priority, Owner owner) {
+        return repository.findAllByFilters(status, priority, owner).stream()
                 .map(mapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public TaskResponseDTO findByTaskId(Long id) {
-        return mapper.toDto(findTaskById(id));
+    public TaskResponseDTO findByTaskId(Long id, Owner owner) {
+        return mapper.toDto(findTaskById(id, owner));
     }
 
     @Transactional
-    public TaskResponseDTO updateTask(Long id, TaskRequestDTO requestDTO) {
-        Task task = findTaskById(id);
+    public TaskResponseDTO updateTask(Long id, TaskRequestDTO requestDTO, Owner owner) {
+        Task task = findTaskById(id, owner);
         mapper.updateTaskFromDto(requestDTO, task);
         return mapper.toDto(repository.saveAndFlush(task));
     }
 
     @Transactional
-    public TaskResponseDTO updateTaskStatus(Long id, TaskStatusDTO statusDTO) {
-        Task task = findTaskById(id);
+    public TaskResponseDTO updateTaskStatus(Long id, TaskStatusDTO statusDTO, Owner owner) {
+        Task task = findTaskById(id, owner);
         Status current = task.getStatus();
         Status target = statusDTO.status();
 
@@ -65,26 +67,26 @@ public class TaskService {
     }
 
     @Transactional
-    public TaskResponseDTO updateTaskPriority(Long id, TaskPriorityDTO priorityDTO) {
-        Task task = findTaskById(id);
+    public TaskResponseDTO updateTaskPriority(Long id, TaskPriorityDTO priorityDTO, Owner owner) {
+        Task task = findTaskById(id, owner);
         mapper.updatePriorityFromDto(priorityDTO, task);
         return mapper.toDto(repository.saveAndFlush(task));
     }
 
     @Transactional
-    public TaskResponseDTO updateTaskDueDate(Long id, TaskDueDateDTO dueDateDTO) {
-        Task task = findTaskById(id);
+    public TaskResponseDTO updateTaskDueDate(Long id, TaskDueDateDTO dueDateDTO, Owner owner) {
+        Task task = findTaskById(id, owner);
         mapper.updateDueDateFromDto(dueDateDTO, task);
         return mapper.toDto(repository.saveAndFlush(task));
     }
 
     @Transactional
-    public void deleteTask(Long id) {
-        repository.delete(findTaskById(id));
+    public void deleteTask(Long id, Owner owner) {
+        repository.delete(findTaskById(id, owner));
     }
 
-    private Task findTaskById(Long id) {
-        return repository.findById(id)
+    private Task findTaskById(Long id, Owner owner) {
+        return repository.findByIdAndOwner(id, owner)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
     }
 }

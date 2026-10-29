@@ -54,6 +54,11 @@ public class Task {
     @Column(name = "updated_at", nullable = false)
     private LocalDateTime updatedAt;
 
+    @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "owner_id", nullable = false, updatable = false)
+    private Owner owner;
+
     public Task(String title, String description, Status status, Priority priority, LocalDate dueDate) {
         this.title = title;
         this.description = description;
