@@ -20,10 +20,11 @@ import java.util.UUID;
 @AllArgsConstructor
 public class OwnerInterceptor implements HandlerInterceptor {
 
-    public static final String COOKIE_NAME = "owner_token";
     public static final String OWNER_ATTRIBUTE = "owner";
 
     private final OwnerRepository ownerRepository;
+    private final VisitorCookieFactory cookieFactory;
+    private final CookieProperties cookieProperties;
 
     @Override
     public boolean preHandle(HttpServletRequest request,
@@ -51,7 +52,7 @@ public class OwnerInterceptor implements HandlerInterceptor {
             return Optional.empty();
         }
         return Arrays.stream(cookies)
-                .filter(cookie -> COOKIE_NAME.equals(cookie.getName()))
+                .filter(cookie -> cookieProperties.name().equals(cookie.getName()))
                 .map(Cookie::getValue)
                 .findFirst()
                 .flatMap(this::parseUuid);
@@ -66,14 +67,7 @@ public class OwnerInterceptor implements HandlerInterceptor {
     }
 
     private void addOwnerCookie(HttpServletResponse response, Owner owner) {
-        ResponseCookie cookie = ResponseCookie.from(COOKIE_NAME, owner.getToken().toString())
-                .httpOnly(true)
-                .secure(false)
-                .path("/")
-                .maxAge(Duration.ofDays(365))
-                .sameSite("Lax")
-                .build();
-
+        ResponseCookie cookie = cookieFactory.create(owner.getToken().toString());
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
     }
 }
