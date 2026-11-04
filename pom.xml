@@ -58,6 +58,13 @@
 			<scope>runtime</scope>
 		</dependency>
 
+		<!-- Banco de dados H2 -->
+		<dependency>
+			<groupId>com.h2database</groupId>
+			<artifactId>h2</artifactId>
+			<scope>test</scope>
+		</dependency>
+
 		<!-- Testes -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
