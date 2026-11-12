@@ -1,0 +1,5 @@
+# Copie este arquivo para application-local.yaml e ative o perfil "local".
+# O application-local.yaml está no .gitignore e não vai para o repositório.
+app:
+  cookie:
+    secure: false   # permite o cookie em http://localhost (sem HTTPS)
