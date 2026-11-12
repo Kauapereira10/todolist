@@ -5,6 +5,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -14,6 +16,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
@@ -186,6 +190,33 @@ class TaskIsolationTest {
                         .cookie(visitorA))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)));
+    }
+
+    @ParameterizedTest(name = "cookie forjado: {0}")
+    @ValueSource(strings = {
+            "malformed-uuid",
+            "12345",
+            "00000000-0000-0000-0000-000000000000"
+    })
+    @DisplayName("Cookie forjado não deveria dar acesso a tarefas de outro visitante")
+    void forgedCookie_doesNotLeakTasksOfOtherVisitor(String forgedValue) throws Exception {
+        Cookie visitorA = newVisitor();
+        createTask(visitorA, "tarefa do A", "HIGH");
+
+        mockMvc.perform(get("/api/tasks").cookie(visitorA))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(1)));
+
+        Cookie forged = new Cookie(cookieProperties.name(), forgedValue);
+
+        MvcResult result = mockMvc.perform(get("/api/tasks").cookie(forged))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$", hasSize(0)))
+                .andReturn();
+
+        Cookie issued = result.getResponse().getCookie(cookieProperties.name());
+        assertNotNull(issued);
+        assertNotEquals(forgedValue, issued.getValue());
     }
 
     private Cookie newVisitor() throws Exception {
