@@ -43,6 +43,11 @@ public class Task {
     private Priority priority;
 
     @Setter
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;
+
+    @Setter
     @Column(name = "due_date")
     private LocalDate dueDate;
 
