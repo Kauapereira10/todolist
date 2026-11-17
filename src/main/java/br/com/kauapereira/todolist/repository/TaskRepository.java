@@ -24,4 +24,7 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
                                 @Param("owner") Owner owner);
 
     Optional<Task> findByIdAndOwner(Long id, Owner owner);
+
+    boolean existsByCategoryIdAndOwner(Long categoryId, Owner owner);
+
 }
