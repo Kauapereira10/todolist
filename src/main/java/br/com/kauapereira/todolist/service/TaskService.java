@@ -1,6 +1,10 @@
 package br.com.kauapereira.todolist.service;
 
-import br.com.kauapereira.todolist.dto.*;
+import br.com.kauapereira.todolist.dto.task.TaskDueDateDTO;
+import br.com.kauapereira.todolist.dto.task.TaskPriorityDTO;
+import br.com.kauapereira.todolist.dto.task.TaskRequestDTO;
+import br.com.kauapereira.todolist.dto.task.TaskResponseDTO;
+import br.com.kauapereira.todolist.dto.task.TaskStatusDTO;
 import br.com.kauapereira.todolist.exception.InvalidStatusTransitionException;
 import br.com.kauapereira.todolist.exception.ResourceNotFoundException;
 import br.com.kauapereira.todolist.mappers.TaskMapper;

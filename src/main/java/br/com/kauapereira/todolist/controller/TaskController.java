@@ -1,7 +1,11 @@
 package br.com.kauapereira.todolist.controller;
 
 import br.com.kauapereira.todolist.config.OwnerInterceptor;
-import br.com.kauapereira.todolist.dto.*;
+import br.com.kauapereira.todolist.dto.task.TaskDueDateDTO;
+import br.com.kauapereira.todolist.dto.task.TaskPriorityDTO;
+import br.com.kauapereira.todolist.dto.task.TaskRequestDTO;
+import br.com.kauapereira.todolist.dto.task.TaskResponseDTO;
+import br.com.kauapereira.todolist.dto.task.TaskStatusDTO;
 import br.com.kauapereira.todolist.model.Owner;
 import br.com.kauapereira.todolist.model.enums.Priority;
 import br.com.kauapereira.todolist.model.enums.Status;

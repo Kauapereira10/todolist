@@ -1,4 +1,4 @@
-package br.com.kauapereira.todolist.dto;
+package br.com.kauapereira.todolist.dto.task;
 
 import br.com.kauapereira.todolist.model.enums.Priority;
 import jakarta.validation.constraints.NotNull;
