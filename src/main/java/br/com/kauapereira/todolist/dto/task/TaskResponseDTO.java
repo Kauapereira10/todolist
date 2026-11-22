@@ -1,5 +1,6 @@
 package br.com.kauapereira.todolist.dto.task;
 
+import br.com.kauapereira.todolist.dto.category.CategoryResponseDTO;
 import br.com.kauapereira.todolist.model.enums.Priority;
 import br.com.kauapereira.todolist.model.enums.Status;
 
@@ -13,6 +14,7 @@ public record TaskResponseDTO(
         Status status,
         Priority priority,
         LocalDate dueDate,
+        CategoryResponseDTO category,
         LocalDateTime createdAt,
         LocalDateTime updatedAt
 ) {

@@ -8,7 +8,7 @@ import br.com.kauapereira.todolist.dto.task.TaskStatusDTO;
 import br.com.kauapereira.todolist.model.Task;
 import org.mapstruct.*;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = CategoryMapper.class)
 public interface TaskMapper {
 
     TaskResponseDTO toDto(Task task);

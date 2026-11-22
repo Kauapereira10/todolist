@@ -18,6 +18,8 @@ public record TaskRequestDTO(
     Priority priority,
 
     @NotNull(message = "Due date cannot be empty")
-    LocalDate dueDate
+    LocalDate dueDate,
+
+    Long categoryId
 ) {
 }

@@ -8,10 +8,12 @@ import br.com.kauapereira.todolist.dto.task.TaskStatusDTO;
 import br.com.kauapereira.todolist.exception.InvalidStatusTransitionException;
 import br.com.kauapereira.todolist.exception.ResourceNotFoundException;
 import br.com.kauapereira.todolist.mappers.TaskMapper;
+import br.com.kauapereira.todolist.model.Category;
 import br.com.kauapereira.todolist.model.Owner;
 import br.com.kauapereira.todolist.model.Task;
 import br.com.kauapereira.todolist.model.enums.Priority;
 import br.com.kauapereira.todolist.model.enums.Status;
+import br.com.kauapereira.todolist.repository.CategoryRepository;
 import br.com.kauapereira.todolist.repository.TaskRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -25,17 +27,19 @@ public class TaskService {
 
     private final TaskRepository repository;
     private final TaskMapper mapper;
+    private final CategoryRepository categoryRepository;
 
     @Transactional
     public TaskResponseDTO createTask(TaskRequestDTO requestDTO, Owner owner) {
         Task task = mapper.toEntity(requestDTO);
         task.setOwner(owner);
+        task.setCategory(findCategoryById(requestDTO.categoryId(), owner));
         return mapper.toDto(repository.save(task));
     }
 
     @Transactional(readOnly = true)
-    public List<TaskResponseDTO> listTasks(Status status, Priority priority, Owner owner) {
-        return repository.findAllByFilters(status, priority, owner).stream()
+    public List<TaskResponseDTO> listTasks(Status status, Priority priority, Long categoryId, Owner owner) {
+        return repository.findAllByFilters(status, priority, categoryId, owner).stream()
                 .map(mapper::toDto)
                 .toList();
     }
@@ -49,6 +53,7 @@ public class TaskService {
     public TaskResponseDTO updateTask(Long id, TaskRequestDTO requestDTO, Owner owner) {
         Task task = findTaskById(id, owner);
         mapper.updateTaskFromDto(requestDTO, task);
+        task.setCategory(findCategoryById(requestDTO.categoryId(), owner));
         return mapper.toDto(repository.saveAndFlush(task));
     }
 
@@ -92,5 +97,13 @@ public class TaskService {
     private Task findTaskById(Long id, Owner owner) {
         return repository.findByIdAndOwner(id, owner)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found with id: " + id));
+    }
+
+    private Category findCategoryById(Long categoryId, Owner owner) {
+        if (categoryId == null) {
+            return null;
+        }
+        return categoryRepository.findByIdAndOwnerId(categoryId, owner.getId())
+                .orElseThrow(() -> new ResourceNotFoundException("Category not found with id: " + categoryId));
     }
 }
