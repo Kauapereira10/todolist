@@ -14,13 +14,16 @@ import java.util.Optional;
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     @Query("""
-            SELECT t FROM Task t
-            WHERE (:status IS NULL OR t.status = :status)
-              AND (:priority IS NULL OR t.priority = :priority)
-              AND t.owner = :owner
-            """)
+        SELECT t FROM Task t
+        LEFT JOIN FETCH t.category
+        WHERE (:status IS NULL OR t.status = :status)
+          AND (:priority IS NULL OR t.priority = :priority)
+          AND (:categoryId IS NULL OR t.category.id = :categoryId)
+          AND t.owner = :owner
+        """)
     List<Task> findAllByFilters(@Param("status") Status status,
                                 @Param("priority") Priority priority,
+                                @Param("categoryId") Long categoryId,
                                 @Param("owner") Owner owner);
 
     Optional<Task> findByIdAndOwner(Long id, Owner owner);

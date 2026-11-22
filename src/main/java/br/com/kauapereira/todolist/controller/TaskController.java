@@ -36,9 +36,10 @@ public class TaskController {
     public ResponseEntity<List<TaskResponseDTO>> listTasks(
             @RequestAttribute(OwnerInterceptor.OWNER_ATTRIBUTE) Owner owner,
             @RequestParam(name = "status", required = false) Status status,
-            @RequestParam(name = "priority", required = false) Priority priority
+            @RequestParam(name = "priority", required = false) Priority priority,
+            @RequestParam(name = "categoryId", required = false) Long categoryId
     ) {
-        return ResponseEntity.ok(service.listTasks(status, priority, owner));
+        return ResponseEntity.ok(service.listTasks(status, priority, categoryId,owner));
     }
 
     @GetMapping("/{id}")
