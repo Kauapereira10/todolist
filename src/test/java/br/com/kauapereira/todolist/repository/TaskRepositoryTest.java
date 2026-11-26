@@ -85,7 +85,7 @@ class TaskRepositoryTest {
         saveTask(ownerB, "Tarefa B1", Status.IN_PROGRESS, Priority.MEDIUM);
         flushAndClear();
 
-        List<Task> tasks = taskRepository.findAllByFilters(null, null, ownerA);
+        List<Task> tasks = taskRepository.findAllByFilters(null, null, null, ownerA);
         assertThat(tasks).hasSize(2);
     }
 
@@ -97,7 +97,7 @@ class TaskRepositoryTest {
         saveTask(ownerB, "Tarefa B1", Status.IN_PROGRESS, Priority.MEDIUM);
         flushAndClear();
 
-        List<Task> tasks = taskRepository.findAllByFilters(Status.IN_PROGRESS, null, ownerA);
+        List<Task> tasks = taskRepository.findAllByFilters(Status.IN_PROGRESS, null, null, ownerA);
         assertThat(tasks).extracting(Task::getTitle)
                 .containsExactly("Tarefa A1");
     }
@@ -110,7 +110,7 @@ class TaskRepositoryTest {
         saveTask(ownerB, "B-high", Status.TO_DO, Priority.HIGH);
         flushAndClear();
 
-        List<Task> tasks = taskRepository.findAllByFilters(null, Priority.HIGH, ownerA);
+        List<Task> tasks = taskRepository.findAllByFilters(null, Priority.HIGH, null, ownerA);
         assertThat(tasks).extracting(Task::getTitle)
                 .containsExactly("A-high");
     }
@@ -124,7 +124,7 @@ class TaskRepositoryTest {
         saveTask(ownerB, "B-match", Status.IN_PROGRESS, Priority.MEDIUM);
         flushAndClear();
 
-        List<Task> tasks = taskRepository.findAllByFilters(Status.IN_PROGRESS, Priority.MEDIUM, ownerA);
+        List<Task> tasks = taskRepository.findAllByFilters(Status.IN_PROGRESS, Priority.MEDIUM, null, ownerA);
         assertThat(tasks).extracting(Task::getTitle)
                 .containsExactly("A-match");
 
@@ -137,7 +137,7 @@ class TaskRepositoryTest {
         saveTask(ownerB, "B2", Status.COMPLETED, Priority.LOW);
         flushAndClear();
 
-        List<Task> tasks = taskRepository.findAllByFilters(null, null, ownerA);
+        List<Task> tasks = taskRepository.findAllByFilters(null, null, null, ownerA);
         assertThat(tasks).isEmpty();
 
     }
