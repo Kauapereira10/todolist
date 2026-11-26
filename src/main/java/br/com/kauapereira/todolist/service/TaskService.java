@@ -1,5 +1,6 @@
 package br.com.kauapereira.todolist.service;
 
+import br.com.kauapereira.todolist.dto.task.TaskCategoryDTO;
 import br.com.kauapereira.todolist.dto.task.TaskDueDateDTO;
 import br.com.kauapereira.todolist.dto.task.TaskPriorityDTO;
 import br.com.kauapereira.todolist.dto.task.TaskRequestDTO;
@@ -86,6 +87,20 @@ public class TaskService {
     public TaskResponseDTO updateTaskDueDate(Long id, TaskDueDateDTO dueDateDTO, Owner owner) {
         Task task = findTaskById(id, owner);
         mapper.updateDueDateFromDto(dueDateDTO, task);
+        return mapper.toDto(repository.saveAndFlush(task));
+    }
+
+    @Transactional
+    public TaskResponseDTO updateTaskCategory(Long id, TaskCategoryDTO taskCategoryDTO, Owner owner) {
+        Task task = findTaskById(id, owner);
+        Category category = findCategoryById(taskCategoryDTO.categoryId(), owner);
+
+        Long currentCategoryId = task.getCategory() != null ? task.getCategory().getId() : null;
+        if (category.getId().equals(currentCategoryId)) {
+            return mapper.toDto(task);
+        }
+
+        task.setCategory(category);
         return mapper.toDto(repository.saveAndFlush(task));
     }
 

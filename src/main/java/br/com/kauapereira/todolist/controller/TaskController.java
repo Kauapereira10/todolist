@@ -1,6 +1,7 @@
 package br.com.kauapereira.todolist.controller;
 
 import br.com.kauapereira.todolist.config.OwnerInterceptor;
+import br.com.kauapereira.todolist.dto.task.TaskCategoryDTO;
 import br.com.kauapereira.todolist.dto.task.TaskDueDateDTO;
 import br.com.kauapereira.todolist.dto.task.TaskPriorityDTO;
 import br.com.kauapereira.todolist.dto.task.TaskRequestDTO;
@@ -82,6 +83,15 @@ public class TaskController {
             @RequestAttribute(OwnerInterceptor.OWNER_ATTRIBUTE) Owner owner
     ) {
        return ResponseEntity.ok(service.updateTaskDueDate(id, dto, owner));
+    }
+
+    @PatchMapping("/{id}/category")
+    public ResponseEntity<TaskResponseDTO> updateCategory(
+            @PathVariable("id") Long id,
+            @Valid @RequestBody TaskCategoryDTO dto,
+            @RequestAttribute(OwnerInterceptor.OWNER_ATTRIBUTE) Owner owner
+            ) {
+        return ResponseEntity.ok(service.updateTaskCategory(id, dto, owner));
     }
 
     @DeleteMapping("/{id}")
